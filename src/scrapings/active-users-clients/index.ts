@@ -50,6 +50,7 @@ async function mainActiveUsers () {
         await page.locator('text=Todos').click()
 
         logger.info('9- Filtrando inativos')
+        await page.locator('[uib-tooltip]="Mostrar Filtros"').click()
         await page.locator('text=Ações Usuário do cliente Status Endereço de e-mail Ativo Inativo >> [aria-label="Dropdown Arrow"] i').click()
         await page.locator('span:has-text("Inativo")').click()
 
