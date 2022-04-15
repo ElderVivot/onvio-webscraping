@@ -12,6 +12,7 @@ interface IUser {
     email: string
     count: number
     sendEmail: boolean
+    alreadyTrySendEmail?: boolean
 }
 
 async function mainActiveUsers () {
@@ -22,14 +23,14 @@ async function mainActiveUsers () {
         logger.info('1- Abrindo site ONVIO')
         await page.goto('https://onvio.com.br/#/')
 
-        logger.info('2- Informando usuário e senha')
+        logger.info('2- Informando usuario e senha')
         await page.locator('[placeholder="Endereço de E-mail \\(Thomson Reuters ID\\)"]').fill(process.env.USER_LOGIN)
         await page.locator('[placeholder="Senha"]').fill(process.env.USER_PASSWORD)
 
-        logger.info('3- Clicando no botão entrar')
+        logger.info('3- Clicando no botao entrar')
         await page.locator('button[name="signinBtn"]').click()
 
-        logger.info('4- Clicando pra lembrar mais tarde sobre autenticação multi-fator')
+        logger.info('4- Clicando pra lembrar mais tarde sobre autenticacao multi-fator')
         await Promise.all([
             page.waitForNavigation(),
             page.locator('text=Lembrar Mais Tarde').click()
@@ -38,17 +39,17 @@ async function mainActiveUsers () {
         logger.info('5- Abrindo portal cliente')
         await page.goto('https://onvio.com.br/atendimento/#/news/staff')
 
-        logger.info('6- Clicando no botão "Configurações"')
+        logger.info('6- Clicando no botao "Configuracoes"')
         await page.locator('text=Configurações').click()
 
-        logger.info('7- Selecionando opção "Usuários de cliente"')
+        logger.info('7- Selecionando opção "Usuarios de cliente"')
         await page.locator('text=Usuários de cliente').click()
 
-        logger.info('8- Selecionando opção "Todos" pra listar os usuários de todos os clientes')
+        logger.info('8- Selecionando opcao "Todos" pra listar os usuarios de todos os clientes')
         await page.locator('[aria-label="Select Here"]').click()
         await page.locator('text=Todos').click()
 
-        logger.info('9- Coletando todos usuários da listagem')
+        logger.info('9- Coletando todos usuarios da listagem')
         try {
             let stopLoop = false
             while (!stopLoop) {
@@ -72,7 +73,7 @@ async function mainActiveUsers () {
                             await axios.put(`${baseURL}/${user.id}`, { ...user })
                         }
                     } catch (error) {
-                        await axios.post(baseURL, { id, nameUser, email, count: 1, sendEmail: false })
+                        await axios.post(baseURL, { id, nameUser, email, count: 1, sendEmail: false, alreadyTrySendEmail: false })
                     }
 
                     const user: IUser = (await axios.get(`${baseURL}/${id}`)).data
@@ -80,6 +81,7 @@ async function mainActiveUsers () {
                     // if load the same user two times so finish all PageDown possible
                     if (user.count > 2) {
                         stopLoop = true
+                        logger.info('\t- Terminou de pegar listagem de usuarios')
                         break
                     }
                 }
@@ -100,8 +102,12 @@ async function mainActiveUsers () {
 
         const users:IUser[] = (await axios.get(`${baseURL}?sendEmail=false`)).data
 
-        logger.info('10- Abrindo o cadastro de cada usuário, ativando e enviado email')
+        logger.info('10- Abrindo o cadastro de cada usuario, ativando e enviado email')
         for (const user of users) {
+            if (user?.alreadyTrySendEmail) {
+                logger.info(`\t- Ja enviado ou tentativa com erro do usuario: "${user.nameUser}" | "${user.email}"`)
+                continue
+            }
             try {
                 await page.goto(`https://onvio.com.br/atendimento/#/setup/clients-users/update/${user.id}`)
 
@@ -118,8 +124,11 @@ async function mainActiveUsers () {
                 user.sendEmail = true
                 await axios.put(`${baseURL}/${user.id}`, { ...user })
 
-                logger.info(`\t- Enviado do usuário: "${user.nameUser}" | "${user.email}"`)
+                logger.info(`\t- Enviado do usuario: "${user.nameUser}" | "${user.email}"`)
             } catch (error) {
+                user.alreadyTrySendEmail = true
+                await axios.put(`${baseURL}/${user.id}`, { ...user })
+
                 if (axios.isAxiosError(error)) logger.error(error.response?.data)
                 else logger.error(error)
             }
