@@ -1,0 +1,100 @@
+{
+    "env": {
+        "es6": true,
+        "node": true
+    },
+    "extends": [
+        "standard"
+    ],
+    "globals": {
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly"
+    },
+    "parser": "@typescript-eslint/parser",
+    "parserOptions": {
+        "ecmaVersion": 2018,
+        "sourceType": "module"
+    },
+    "plugins": [
+        "@typescript-eslint",
+        "eslint-plugin-import-helpers"
+    ],
+    "rules": {
+        "indent": [
+            "error",
+            4
+        ],
+        "eol-last": [
+            "error",
+            "never"
+        ], // end-of-file never 'enter'
+        "camelcase": ["error", {"properties": "always"}],
+        "no-throw-literal": "off",
+        "no-new": "off",
+        "no-prototype-builtins": "off",
+        "no-restricted-syntax": "off",
+        "max-classes-per-file": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "no-console": "off",
+        "import/prefer-default-export": "off",
+        "@typescript-eslint/explicit-function-return-type": [
+            "off"
+        ],
+        "@typescript-eslint/no-unused-vars": [
+            "error",
+            {
+                "argsIgnorePattern": "_"
+            }
+        ],
+        "no-useless-constructor": "off",
+        "@typescript-eslint/naming-convention": [
+            "error",
+            {
+                "selector": "interface",
+                "format": [
+                    "PascalCase"
+                ],
+                "custom": {
+                    "regex": "^I[A-Z]",
+                    "match": true
+                }
+            }
+        ],
+        "@typescript-eslint/explicit-module-boundary-types": [
+            "warn",
+            {
+                "allowArgumentsExplicitlyTypedAsAny": true
+            }
+        ],
+        "no-underscore-dangle": "off",
+        "@typescript-eslint/camelcase": "off",
+        "class-methods-use-this": "off",
+        "import/extensions": [
+            "error",
+            "never",
+            {
+                "ts": "never"
+            }
+        ],
+        "import-helpers/order-imports": [
+            "warn",
+            {
+                "newlinesBetween": "always", // new line between groups
+                "groups": [
+                    "module",
+                    "/^@server\/shared/",
+                    "/^@/",
+                    [
+                        "parent",
+                        "sibling",
+                        "index"
+                    ]
+                ],
+                "alphabetize": {
+                    "order": "asc",
+                    "ignoreCase": true
+                }
+            }
+        ]
+    }
+}
