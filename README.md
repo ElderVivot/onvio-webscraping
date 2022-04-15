@@ -18,4 +18,4 @@
   
 **C) Startando projeto**
 - No terminal que já está aberto execute `npm run startDB`
-- Abra um novo terminal (*mantenha o que está aberto da forma que está*) e execute `npm run activeUsersClients`
+- Abra um novo terminal (*NÃO feche/finalize o que está aberto - startDB*) e execute `npm run activeUsersClients`
