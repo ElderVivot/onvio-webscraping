@@ -16,7 +16,7 @@ interface IUser {
 
 async function mainActiveUsers () {
     try {
-        const browser = await webkit.launch({ headless: false, slowMo: 1500 })
+        const browser = await webkit.launch({ headless: false, slowMo: 1500, timeout: 10000 })
         const page = await browser.newPage()
 
         logger.info('1- Abrindo site ONVIO')
