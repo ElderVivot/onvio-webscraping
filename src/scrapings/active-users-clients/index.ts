@@ -49,7 +49,11 @@ async function mainActiveUsers () {
         await page.locator('[aria-label="Select Here"]').click()
         await page.locator('text=Todos').click()
 
-        logger.info('9- Coletando todos usuarios da listagem')
+        logger.info('9- Filtrando inativos')
+        await page.locator('text=Ações Usuário do cliente Status Endereço de e-mail Ativo Inativo >> [aria-label="Dropdown Arrow"] i').click()
+        await page.locator('span:has-text("Inativo")').click()
+
+        logger.info('10- Coletando todos usuarios da listagem')
         try {
             let stopLoop = false
             while (!stopLoop) {
@@ -68,7 +72,7 @@ async function mainActiveUsers () {
                     try {
                         const user: IUser = (await axios.get(`${baseURL}/${id}`)).data
                         // if already send email, dont save again
-                        if (!user.sendEmail) {
+                        if (!user.sendEmail && !user?.alreadyTrySendEmail) {
                             user.count = user.count + 1
                             await axios.put(`${baseURL}/${user.id}`, { ...user })
                         }
@@ -102,7 +106,7 @@ async function mainActiveUsers () {
 
         const users:IUser[] = (await axios.get(`${baseURL}?sendEmail=false`)).data
 
-        logger.info('10- Abrindo o cadastro de cada usuario, ativando e enviado email')
+        logger.info('11- Abrindo o cadastro de cada usuario, ativando e enviado email')
         for (const user of users) {
             if (user?.alreadyTrySendEmail) {
                 logger.info(`\t- Ja enviado ou tentativa com erro do usuario: "${user.nameUser}" | "${user.email}"`)
@@ -114,7 +118,11 @@ async function mainActiveUsers () {
                 // Click button[name="client-portal-access-on"]
                 await page.locator('button[name="client-portal-access-on"]').click()
                 // Click text=ENVIAR AGORA
-                await page.locator('text=ENVIAR AGORA').click()
+                if (await page.locator('text=ENVIAR AGORA').isDisabled()) {
+                    await page.locator('form[name="vm\\.sendInviteForm"] >> text=CANCELAR').click()
+                } else {
+                    await page.locator('text=ENVIAR AGORA').click()
+                }
                 // Click button:has-text("Salvar")
                 await Promise.all([
                     page.waitForNavigation(),

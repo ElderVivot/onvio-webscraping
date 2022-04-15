@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "activeUsersClients": "ts-node -r tsconfig-paths/register src/scrapings/active-users-clients | pino-pretty -c -t",
-    "startDB": "json-server --watch database.json -p 3491"
+    "startDB": "json-server --watch database.json -p 3491",
+    "startDBTest": "json-server --watch database-test.json -p 3491"
   },
   "keywords": [],
   "author": "",
