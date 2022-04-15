@@ -66,9 +66,11 @@ async function mainActiveUsers () {
 
                     try {
                         const user: IUser = (await axios.get(`${baseURL}/${id}`)).data
-                        if (user.sendEmail) continue // if already send email, dont process again
-                        user.count = user.count + 1
-                        await axios.put(`${baseURL}/${user.id}`, { ...user })
+                        // if already send email, dont save again
+                        if (!user.sendEmail) {
+                            user.count = user.count + 1
+                            await axios.put(`${baseURL}/${user.id}`, { ...user })
+                        }
                     } catch (error) {
                         await axios.post(baseURL, { id, nameUser, email, count: 1, sendEmail: false })
                     }
