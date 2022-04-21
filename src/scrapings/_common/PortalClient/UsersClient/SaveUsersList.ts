@@ -5,6 +5,8 @@ import { logger } from '@common/log'
 import { baseURL } from '@scrapings/_common/_baseUrl'
 import { IUser } from '@scrapings/_common/_interfaces'
 
+const userCount = {}
+
 export async function SaveUsersList (page: Page): Promise<void> {
     try {
         let stopLoop = false
@@ -19,23 +21,32 @@ export async function SaveUsersList (page: Page): Promise<void> {
 
                 const nameUser = await page.locator(`#groupGrid > div:nth-child(5) > div:nth-child(1) > div.wj-cells > div.wj-row:nth-child(${nthChild}) > div:nth-child(2) > div > div`).innerText()
 
+                let statusUser = await page.locator(`#groupGrid > div:nth-child(5) > div:nth-child(1) > div.wj-cells > div.wj-row:nth-child(${nthChild}) > div:nth-child(3) > div > div`).innerText()
+                statusUser = statusUser.toUpperCase()
+
                 const email = await page.locator(`#groupGrid > div:nth-child(5) > div:nth-child(1) > div.wj-cells > div.wj-row:nth-child(${nthChild}) > div:nth-child(4) > div > div`).innerText()
+
+                userCount[id] = userCount[id] ? userCount[id] + 1 : 1
 
                 try {
                     const user: IUser = (await axios.get(`${baseURL}/${id}`)).data
-                    // if already send email, dont save again
-                    if (!user.sendEmail && !user?.alreadyTrySendEmail) {
-                        user.count = user.count + 1
-                        await axios.put(`${baseURL}/${user.id}`, { ...user })
-                    }
+                    user.nameUser = nameUser
+                    user.statusUser = statusUser
+                    await axios.put(`${baseURL}/${user.id}`, { ...user })
                 } catch (error) {
-                    await axios.post(baseURL, { id, nameUser, email, count: 1, sendEmail: false, alreadyTrySendEmail: false })
+                    await axios.post(baseURL, {
+                        id,
+                        nameUser,
+                        email,
+                        statusUser,
+                        sendEmail: false,
+                        alreadyTrySendEmail: false,
+                        updatePermissionDocuments: false
+                    })
                 }
 
-                const user: IUser = (await axios.get(`${baseURL}/${id}`)).data
-
                 // if load the same user two times so finish all PageDown possible
-                if (user.count > 2) {
+                if (userCount[id] > 2) {
                     stopLoop = true
                     logger.info('\t- Terminou de pegar listagem de usuarios')
                     break

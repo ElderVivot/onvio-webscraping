@@ -2,7 +2,8 @@ export interface IUser {
     id: string
     nameUser: string
     email: string
-    count: number
+    statusUser: string
     sendEmail: boolean
     alreadyTrySendEmail?: boolean
+    updatePermissionDocuments?: boolean
 }

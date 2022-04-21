@@ -16,7 +16,7 @@ import { OpenUserRegistration } from '@scrapings/_common/PortalClient/UsersClien
 import { SaveUsersList } from '@scrapings/_common/PortalClient/UsersClient/SaveUsersList'
 import { SelectOptionAllClients } from '@scrapings/_common/PortalClient/UsersClient/SelectOptionAllClients'
 
-async function mainActiveUsers () {
+async function mainGivePermissionDocuments () {
     try {
         const browser = await webkit.launch({ headless: false, slowMo: 1500, timeout: 10000 })
         const page = await browser.newPage()
@@ -24,19 +24,19 @@ async function mainActiveUsers () {
         logger.info('1- Abrindo site ONVIO e realizando Login')
         await Login(page)
 
-        logger.info('5- Abrindo portal cliente')
+        logger.info('2- Abrindo portal cliente')
         await OpenPortal(page)
 
-        logger.info('6- Clicando no botao "Configuracoes"')
+        logger.info('3- Clicando no botao "Configuracoes"')
         await ClickButtonConfiguracoes(page)
 
-        logger.info('7- Selecionando opção "Usuarios de cliente"')
+        logger.info('4- Selecionando opção "Usuarios de cliente"')
         await ClickUsersClient(page)
 
-        logger.info('8- Selecionando opcao "Todos" pra listar os usuarios de todos os clientes')
+        logger.info('5- Selecionando opcao "Todos" pra listar os usuarios de todos os clientes')
         await SelectOptionAllClients(page)
 
-        logger.info('9- Filtrando inativos')
+        logger.info('6- Filtrando ativos')
         await FilterUsers(page, 'Inativo')
 
         logger.info('10- Coletando todos usuarios da listagem')
@@ -77,4 +77,4 @@ async function mainActiveUsers () {
     }
 }
 
-mainActiveUsers().then(_ => logger.info(_)).catch(_ => logger.error)
+mainGivePermissionDocuments().then(_ => logger.info(_)).catch(_ => logger.error)

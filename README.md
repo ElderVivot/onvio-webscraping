@@ -3,7 +3,7 @@
 
 ### Desenvolvido com nodejs usando biblioteca Playwright
 
-###### Implementado apenas a parte de ***ativar os usuários do cliente do escritório*** (portal do cliente). Muito útil pra quem migra do DA (Domínio Atendimento) e os usuários vem todos inativos, tendo que ativar cada um manualmente afim de que o ***cliente receba o email*** e comece utilizar o novo portal.
+###### Implementado apenas a parte de ***ativar os usuários do cliente do escritório e setar as pastas dos documentos de acordos os departamentos que eles tem acesso*** (portal do cliente). Muito útil pra quem migra do DA (Domínio Atendimento) e os usuários vem todos inativos, tendo que ativar cada um manualmente afim de que o ***cliente receba o email*** e comece utilizar o novo portal já com as permissões devida de acordo os departamentos que eles estão vinculados.
 #
 
 ### Colocando pra funcionar
@@ -18,4 +18,5 @@
   
 **C) Startando projeto**
 - No terminal que já está aberto execute `npm run startDB`
-- Abra um novo terminal (*NÃO feche/finalize o que está aberto - startDB*) e execute `npm run activeUsersClients`
+- Abra um novo terminal (*NÃO feche/finalize o que está aberto - startDB*) e execute `npm run ActiveUsersClients` para ativar os usuários de cliente e enviar os emails pros clientes confirmar o cadastro
+- Após o comando acima terminar, execute `npm run GivePermissionDocumentsToUsers` para dar permissões nas pastas que os usuários devem ter acesso de acordo os departamentos vinculados
