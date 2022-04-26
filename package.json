@@ -6,6 +6,7 @@
   "scripts": {
     "ActiveUsersClients": "ts-node -r tsconfig-paths/register src/scrapings/ActiveUsersClients | pino-pretty -c -t",
     "GivePermissionDocumentsToUsers": "ts-node -r tsconfig-paths/register src/scrapings/GivePermissionDocumentsToUsers | pino-pretty -c -t",
+    "TestNfeEntradaGoias": "ts-node -r tsconfig-paths/register src/scrapings/TestNfeEntradaGoias | pino-pretty -c -t",
     "startDB": "json-server --watch database.json -p 3491",
     "startDBTest": "json-server --watch database-test.json -p 3491"
   },

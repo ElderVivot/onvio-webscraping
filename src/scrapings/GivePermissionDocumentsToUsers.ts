@@ -42,8 +42,8 @@ async function mainGivePermissionDocuments () {
         // logger.info('6- Filtrando ativos')
         // await FilterUsers(page, 'Ativo')
 
-        logger.info('7- Coletando todos usuarios da listagem')
-        await SaveUsersList(page)
+        // logger.info('7- Coletando todos usuarios da listagem')
+        // await SaveUsersList(page)
 
         const users:IUser[] = (await axios.get(`${baseURL}?statusUser=ATIVO`)).data
         // const users:IUser[] = (await axios.get(`${baseURL}?id=6FD51ABD0C1742A2835050EB0382915D`)).data
